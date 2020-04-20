@@ -43,14 +43,14 @@ fun timeSecondsToStr(seconds: Int): String {
  * Пример: консольный ввод
  */
 fun main() {
-    println("Введите время в формате ЧЧ:ММ:СС")
+    println("Введите дату в формате ДД.ММ.ГГГГ")
     val line = readLine()
     if (line != null) {
-        val seconds = timeStrToSeconds(line)
-        if (seconds == -1) {
-            println("Введённая строка $line не соответствует формату ЧЧ:ММ:СС")
+        val date = dateDigitToStr(line)
+        if (date.isEmpty()) {
+            println("Введённая строка $line не соответствует формату ДД:ММ:ГГГГ")
         } else {
-            println("Прошло секунд с начала суток: $seconds")
+            println("Дата: $date")
         }
     } else {
         println("Достигнут <конец файла> в процессе чтения строки. Программа прервана")
@@ -81,7 +81,52 @@ fun dateStrToDigit(str: String): String = TODO()
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
-fun dateDigitToStr(digital: String): String = TODO()
+fun dateDigitToStr(digital: String): String {
+    val listDate = digital.split(".")
+    if (listDate.size != 3) return ""
+
+    try {
+        listDate[0].toInt()
+        listDate[1].toInt()
+        listDate[2].toInt()
+    } catch (e: NumberFormatException) {
+        return ""
+    }
+
+    val day = listDate[0].toInt()
+    val digMonth = listDate[1].toInt()
+    val year = listDate[2].toInt()
+    var month = ""
+
+    if ((digMonth < 1) || (digMonth > 12)) return ""
+
+    val jan = mapOf((1 to "января") to 31)
+    var feb = mutableMapOf((2 to "февраля") to 29)
+    val mar = mapOf((3 to "марта") to 31)
+    val apr = mapOf((4 to "апреля") to 30)
+    val may = mapOf((5 to "мая") to 31)
+    val june = mapOf((6 to "июня") to 30)
+    val july = mapOf((7 to "июля") to 31)
+    val aug = mapOf((8 to "августа") to 31)
+    val sept = mapOf((9 to "сентября") to 30)
+    val oct = mapOf((10 to "октября") to 31)
+    val nov = mapOf((11 to "ноября") to 30)
+    val dec = mapOf((12 to "декабря") to 31)
+    if (digMonth == 2)                  //проверка на високосный год
+        if ((year % 4 != 0) || ((year % 100 == 0) && (year % 400 != 0)))
+            feb[2 to "февраля"] = 28
+
+    val listMonth = jan + feb + mar + apr + may + june + july + aug + sept + oct + nov + dec
+
+    for((pairMonth, maxDay) in listMonth) {
+        if (digMonth == pairMonth.first) {
+            if (day <= maxDay) month = pairMonth.second
+            break
+        }
+    }
+    if (month.isEmpty()) return ""
+    return String.format("%d %s %d", day, month, year)
+}
 
 /**
  * Средняя
