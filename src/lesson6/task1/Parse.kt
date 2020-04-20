@@ -83,22 +83,14 @@ fun dateStrToDigit(str: String): String = TODO()
  */
 fun dateDigitToStr(digital: String): String {
     val listDate = digital.split(".")
-    if (listDate.size != 3) return ""
 
-    try {
-        listDate[0].toInt()
-        listDate[1].toInt()
-        listDate[2].toInt()
-    } catch (e: NumberFormatException) {
-        return ""
-    }
+    val result = digital.matches(Regex("""\d{2}\.([0]\d|[1][0-2])\.\d{4}"""))
+    if (!result) return ""
 
     val day = listDate[0].toInt()
     val digMonth = listDate[1].toInt()
     val year = listDate[2].toInt()
     var month = ""
-
-    if ((digMonth < 1) || (digMonth > 12)) return ""
 
     val jan = mapOf((1 to "января") to 31)
     var feb = mutableMapOf((2 to "февраля") to 29)
