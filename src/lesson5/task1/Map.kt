@@ -147,7 +147,16 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = TODO()
  *     mapOf("Emergency" to "911", "Police" to "02")
  *   ) -> mapOf("Emergency" to "112, 911", "Police" to "02")
  */
-fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> = TODO()
+fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
+    val mutMapA = mapA.toMutableMap()
+    for ((keyA, valueA) in mutMapA) {
+        for ((keyB, valueB) in mapB) {
+            if ((keyA == keyB) && (valueA != valueB))
+                mutMapA[keyA] = "$valueA, $valueB"
+        }
+    }
+    return mapB + mutMapA
+}
 
 /**
  * Средняя
@@ -187,7 +196,11 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  * Например:
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
-fun canBuildFrom(chars: List<Char>, word: String): Boolean = TODO()
+fun canBuildFrom(chars: List<Char>, word: String): Boolean {
+    val charsSet = chars.toSet()
+    val wordSet = word.toSet()
+    return charsSet == wordSet
+}
 
 /**
  * Средняя
